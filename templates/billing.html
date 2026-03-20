@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Billing</h2>
+
+<form method="get" class="mb-3">
+
+<label>Select School</label>
+<select name="school" class="form-control" onchange="this.form.submit()">
+
+<option value="">Choose School</option>
+
+{% for s in schools %}
+<option value="{{s[0]}}" {% if request.args.get("school") == s[0]|string %}selected{% endif %}>
+{{s[1]}}
+</option>
+{% endfor %}
+
+</select>
+
+</form>
+
+<form method="post">
+
+<input type="hidden" name="school" value="{{request.args.get('school')}}">
+
+<div class="mb-2">
+<label>Student Name</label>
+<input class="form-control" name="student" required>
+</div>
+
+<div class="mb-2">
+<label>Class</label>
+<input class="form-control" name="class" required>
+</div>
+
+<div class="mb-2">
+<label>Category</label>
+<select name="category" class="form-control">
+<option value="Normal">Normal</option>
+<option value="EWS">EWS</option>
+</select>
+</div>
+
+<div class="mb-2">
+<label>Discount</label>
+<input type="number" name="discount" value="0" class="form-control">
+</div>
+
+{% if books %}
+
+<table class="table mt-3">
+
+<tr>
+<th>Book</th>
+<th>Stock</th>
+<th>Price</th>
+<th>Qty</th>
+</tr>
+
+{% for b in books %}
+<tr>
+<td>{{b[1]}}</td>
+<td>{{b[3]}}</td>
+<td>₹ {{b[2]}}</td>
+<td>
+<input type="number" name="qty_{{b[0]}}" min="0" class="form-control">
+</td>
+</tr>
+{% endfor %}
+
+</table>
+
+<button class="btn btn-danger mt-3">Generate Bill</button>
+
+{% else %}
+<p class="text-muted mt-3">No stock available for this school</p>
+{% endif %}
+
+</form>
+
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3>VBET Stock Report</h3>
+
+<form method="post" class="row mb-4">
+
+<div class="col">
+<input type="date" name="start" class="form-control" required>
+</div>
+
+<div class="col">
+<input type="date" name="end" class="form-control" required>
+</div>
+
+<div class="col">
+<button class="btn btn-primary">Generate</button>
+</div>
+
+</form>
+
+<table class="table table-bordered">
+
+<tr>
+<th>Book</th>
+<th>Vendor</th>
+<th>Qty</th>
+<th>Price</th>
+<th>Date</th>
+</tr>
+
+{% for d in data %}
+<tr>
+<td>{{d[0]}}</td>
+<td>{{d[1]}}</td>
+<td>{{d[2]}}</td>
+<td>{{d[3]}}</td>
+<td>{{d[4]}}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Dashboard</h2>
+
+<div class="row">
+
+<div class="col-md-4">
+<div class="card p-3">
+<h5>Today's Revenue</h5>
+<h3>₹ {{revenue}}</h3>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card p-3">
+<h5>Today's Profit</h5>
+<h3>₹ {{profit}}</h3>
+</div>
+</div>
+
+</div>
+
+<h4 class="mt-4">Low Stock Alerts</h4>
+
+<table class="table">
+
+<tr>
+<th>School</th>
+<th>Book</th>
+<th>Stock</th>
+</tr>
+
+{% for l in low_stock %}
+
+<tr>
+<td>{{l[0]}}</td>
+<td>{{l[1]}}</td>
+<td class="text-danger">{{l[2]}}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% endblock %}

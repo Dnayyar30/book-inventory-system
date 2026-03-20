@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="mb-4">📦 VBET Inventory</h2>
+
+<!-- STOCK -->
+<table class="table table-bordered">
+<tr><th>Book</th><th>Class</th><th>Stock</th></tr>
+
+{% for b in data %}
+<tr>
+<td>{{b[0]}}</td>
+<td>{{b[1]}}</td>
+<td>{{b[2]}}</td>
+</tr>
+{% endfor %}
+</table>
+
+<!-- PENDING -->
+<h4>Pending Orders</h4>
+
+<table class="table table-bordered">
+
+<tr>
+<th>ID</th>
+<th>School</th>
+<th>Book</th>
+<th>Qty</th>
+<th>Action</th>
+</tr>
+
+{% for o in pending_orders %}
+<tr>
+<td>{{o[0]}}</td>
+<td>{{o[1]}}</td>
+<td>{{o[2]}}</td>
+<td>{{o[3]}}</td>
+
+<td>
+<button onclick="openApprove('{{o[0]}}','{{o[1]}}','{{o[2]}}','{{o[3]}}')" class="btn btn-success btn-sm">
+Approve
+</button>
+</td>
+
+</tr>
+{% endfor %}
+
+</table>
+
+<!-- CHALLANS -->
+<h4>Challans</h4>
+
+<table class="table table-bordered">
+
+<tr>
+<th>No</th>
+<th>School</th>
+<th>Qty</th>
+<th>Total</th>
+<th>PDF</th>
+</tr>
+
+{% for c in challans %}
+<tr>
+<td>{{c[0]}}</td>
+<td>{{c[1]}}</td>
+<td>{{c[2]}}</td>
+<td>₹{{c[3]}}</td>
+<td>{{c[4]}}</td>
+
+<td>
+<a href="/challan/{{c[5]}}" class="btn btn-info btn-sm">PDF</a>
+
+
+<span class="badge bg-success">Received</span>
+</td>
+
+</tr>
+{% endfor %}
+</table>
+
+<!-- OVERLAY -->
+<div id="overlay" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.5);
+z-index:999;"></div>
+
+<!-- MODAL -->
+
+<div id="approveModal"
+style="
+display:none;
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:white;
+padding:25px;
+border-radius:12px;
+box-shadow:0 0 20px rgba(0,0,0,0.3);
+z-index:1000;
+width:400px;">
+
+<h5>📄 Challan Preview</h5>
+
+<form method="post" action="/approve_order">
+
+<input type="hidden" name="order_id" id="order_id">
+
+<label>School</label>
+<input id="school_name" class="form-control mb-2" readonly>
+
+<label>Book</label>
+<input id="book_name" class="form-control mb-2" readonly>
+
+<label>Requested Qty</label>
+<input id="req_qty" class="form-control mb-2" readonly>
+
+<label>Approve Qty</label>
+<input type="number" name="qty" id="approve_qty"
+class="form-control mb-2" required oninput="calculateTotal()">
+
+<label>Rate</label>
+<input id="rate" class="form-control mb-2" readonly>
+
+<label>Total</label>
+<input id="total" class="form-control mb-2" readonly>
+
+<button class="btn btn-success w-100">
+Confirm & Generate Challan
+</button>
+
+<button type="button" onclick="closeModal()"
+class="btn btn-secondary w-100 mt-2">
+Cancel
+</button>
+
+</form>
+</div>
+<script>
+function openApprove(id, school, book, qty){
+    document.getElementById("approveModal").style.display="block";
+    document.getElementById("order_id").value = id;
+    document.getElementById("school_name").value = school;
+    document.getElementById("book_name").value = book;
+    document.getElementById("req_qty").value = qty;
+}
+let currentRate = 0;
+
+function openApprove(id, school, book, qty){
+
+    document.getElementById("approveModal").style.display="block";
+
+    document.getElementById("order_id").value = id;
+    document.getElementById("school_name").value = school;
+    document.getElementById("book_name").value = book;
+    document.getElementById("req_qty").value = qty;
+
+    // ❌ no hardcoded rate
+    document.getElementById("rate").value = "Auto";
+}
+
+function calculateTotal(){
+    let qty = document.getElementById("approve_qty").value || 0;
+    document.getElementById("total").value = "Auto";
+}
+
+function closeModal(){
+    document.getElementById("approveModal").style.display="none";
+    document.getElementById("overlay").style.display="none";
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3 class="mb-4">School Account Report</h3>
+
+<form method="post" class="row g-3 mb-4">
+
+<div class="col-md-4">
+<label>Select School</label>
+<select name="school" class="form-control" required>
+
+<option value="">Choose School</option>
+
+{% for s in schools %}
+<option value="{{s[0]}}">{{s[1]}}</option>
+{% endfor %}
+
+</select>
+</div>
+
+<div class="col-md-3">
+<label>From Date</label>
+<input type="date" name="start" class="form-control" required>
+</div>
+
+<div class="col-md-3">
+<label>To Date</label>
+<input type="date" name="end" class="form-control" required>
+</div>
+
+<div class="col-md-2 d-flex align-items-end">
+<button class="btn btn-success w-100">Generate</button>
+</div>
+<div class="col-md-2 d-flex align-items-end">
+    <button formaction="/export/school_report"
+            formmethod="post"
+            class="btn btn-primary w-100">
+        Export Excel
+    </button>
+</div>
+</form>
+
+<div class="card p-3 shadow-sm">
+
+<table class="table table-bordered table-striped">
+
+<thead class="table-dark">
+<tr>
+<th>Book</th>
+<th>Quantity Sold</th>
+<th>Price</th>
+<th>Total</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for r in rows %}
+
+<tr>
+<td>{{r[0]}}</td>
+<td>{{r[1]}}</td>
+<td>₹ {{r[2]}}</td>
+<td>₹ {{r[3]}}</td>
+</tr>
+
+{% endfor %}
+
+{% if not rows %}
+<tr>
+<td colspan="4" class="text-center text-muted">
+No data found for selected range
+</td>
+</tr>
+{% endif %}
+
+</tbody>
+
+<tfoot>
+<tr class="table-secondary">
+<th colspan="3" class="text-end">Grand Total</th>
+<th>₹ {{total}}</th>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+
+{% endblock %}

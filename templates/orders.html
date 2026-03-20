@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="mb-3">📦 Place Order for School</h2>
+
+<div class="card p-3 mb-4 shadow-sm">
+
+<form method="post">
+
+<label>School</label>
+<select name="school" class="form-control" required>
+{% for s in schools %}
+<option value="{{s[0]}}">{{s[1]}}</option>
+{% endfor %}
+</select>
+
+<label class="mt-2">Book</label>
+<select name="book" class="form-control" required>
+{% for b in books %}
+<option value="{{b[0]}}">{{b[1]}} - Class {{b[2]}}</option>
+{% endfor %}
+</select>
+
+<label class="mt-2">Quantity</label>
+<input type="number" name="qty" class="form-control" required>
+
+<button class="btn btn-primary mt-3 w-100">Place Order</button>
+
+</form>
+
+</div>
+
+<div class="card p-3 shadow-sm">
+
+<h5>Order List</h5>
+
+<table class="table table-bordered mt-3">
+
+<tr>
+<th>ID</th>
+<th>School</th>
+<th>Book</th>
+<th>Qty</th>
+<th>Approved</th>
+<th>Received</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+{% for o in orders %}
+<tr>
+<td>{{o[0]}}</td>
+<td>{{o[1]}}</td>
+<td>{{o[2]}}</td>
+<td>{{o[3]}}</td>
+<td>{{o[5]}} / {{o[3]}}</td>
+<td>{{o[6]}} / {{o[3]}}</td>
+
+<td>
+{{o[4]}}
+</td>
+
+<td>
+
+<!-- ✅ PDF ALWAYS -->
+<a href="/challan/{{o[0]}}" class="btn btn-info btn-sm">PDF</a>
+
+<!-- ✅ RECEIVE LOGIC -->
+{% if o[6] == o[3] %}
+<span class="badge bg-success">Received</span>
+
+{% elif o[4] == "Approved" or o[4] == "Partially Approved" %}
+<a href="/receive/{{o[0]}}" class="btn btn-success btn-sm">Receive</a>
+
+{% elif o[4] == "Pending" %}
+<span class="text-warning">Waiting</span>
+
+{% else %}
+<span class="text-danger">Rejected</span>
+{% endif %}
+
+</td>
+{% endfor %}
+
+</table>
+
+</div>
+
+{% endblock %}
